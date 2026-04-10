@@ -1,0 +1,19 @@
+---
+title: "Molly Tseng"
+image: file/profile_image.jpeg
+about:
+  template: jolla
+  links:
+    - icon: envelope
+      href: mailto:hstseng@ucsd.edu
+    - icon: linkedin
+      href: https://www.linkedin.com/in/hsiang-ling%EF%BC%88molly%EF%BC%89-tseng-824390297/
+---
+#### About Me
+
+I am a MS student in Business Analytics at the University of California, San Diego (UCSD).
+I have experience in Python and data analysis, and I enjoy exploring datasets and turning data into insights.
+
+
+
+<!-- To learn more about Quarto websites visit <https://quarto.org/docs/websites>. -->
