@@ -1,5 +1,6 @@
 ---
 title: "My Projects"
 listing:
-  contents: projects  # <-- the sub-directory with blog content
+  contents: projects
   type: grid
+---
