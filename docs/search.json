@@ -11,7 +11,21 @@
     "href": "projects.html",
     "title": "My Projects",
     "section": "",
-    "text": "Explore Taiwan 🇹🇼\n\n\n\n\n\n\nMolly Tseng\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "Explore Taiwan 🇹🇼\n\n\n\n\n\n\nMolly Tseng\n\n\n\n\n\n\n\n\n\n\n\n\n\nExplore Taiwan 🇹🇼\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "projects/project1/index.html",
+    "href": "projects/project1/index.html",
+    "title": "Explore Taiwan 🇹🇼",
+    "section": "",
+    "text": "A revealjs presentation about Taiwan travel."
+  },
+  {
+    "objectID": "projects/project1/index.html#explore-taiwan",
+    "href": "projects/project1/index.html#explore-taiwan",
+    "title": "Explore Taiwan 🇹🇼",
+    "section": "",
+    "text": "A revealjs presentation about Taiwan travel."
   },
   {
     "objectID": "resume.html",
@@ -19,13 +33,6 @@
     "title": "My Resume",
     "section": "",
     "text": "Download PDF file."
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Molly Tseng",
-    "section": "",
-    "text": "About Me\nI am a MS student in Business Analytics at the University of California, San Diego (UCSD). I have experience in Python and data analysis, and I enjoy exploring datasets and turning data into insights."
   },
   {
     "objectID": "projects/project1/slides.html#explore-taiwan",
@@ -68,5 +75,12 @@
     "title": "Explore Taiwan 🇹🇼",
     "section": "Why Visit Taiwan?",
     "text": "Why Visit Taiwan?\n\nAmazing food\nFriendly people\nDiverse landscapes\n\nTaiwan is small but full of unforgettable experiences"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Molly Tseng",
+    "section": "",
+    "text": "About Me\nI am a MS student in Business Analytics at the University of California, San Diego (UCSD). I have experience in Python and data analysis, and I enjoy exploring datasets and turning data into insights."
   }
 ]
