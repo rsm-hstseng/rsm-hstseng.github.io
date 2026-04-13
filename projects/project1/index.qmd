@@ -1,8 +1,6 @@
 ---
 title: "Explore Taiwan 🇹🇼"
 image: images/taiwan_collage.jpg
+author: "Molly Tseng"
 ---
-
-## Explore Taiwan
-
-A revealjs presentation about Taiwan travel.
+<meta http-equiv="refresh" content="0; url=slides.html" />
