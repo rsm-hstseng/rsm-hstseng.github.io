@@ -1,0 +1,134 @@
+---
+title: "Explore Taiwan 🇹🇼"
+author: "Molly Tseng"
+format:
+  revealjs:
+    theme: simple
+    slide-number: true
+    embed-resources: true
+    transition: fade
+    css: styles.css
+    center: false
+---
+
+##  Explore Taiwan
+
+Travel across Taiwan by region and discover the island’s most beautiful destinations
+
+<div style="text-align:center; margin-top:50px;">
+
+<img src="images/taiwan_collage.jpg" width="500px" style="border-radius:20px;">
+
+</div>
+---
+
+## North Taiwan
+
+::: {.columns}
+
+::: {.column width="42%"}
+### Must-visit spots
+- **Taipei 101**
+- **Raohe Night Market**
+- **Jiufen Old Street**
+- **Elephant Mountain**
+:::
+
+::: {.column width="58%"}
+<div class="photo-grid">
+  <img src="images/north1.jpg">
+  <img src="images/north2.jpg">
+  <img src="images/north3.jpg">
+  <img src="images/north4.jpg">
+</div>
+:::
+
+:::
+
+---
+
+## Central Taiwan
+
+::: {.columns}
+
+::: {.column width="42%"}
+### Must-visit spots
+- **Sun Moon Lake**
+- **Qingjing Farm**
+- **Alishan**
+- **Gaomei Wetlands**
+:::
+
+::: {.column width="58%"}
+<div class="photo-grid">
+  <img src="images/central1.jpg">
+  <img src="images/central2.jpg">
+  <img src="images/central3.jpg">
+  <img src="images/central4.jpg">
+</div>
+:::
+
+:::
+---
+
+## South Taiwan
+
+::: {.columns}
+
+::: {.column width="42%"}
+### Must-visit spots
+- **Kaohsiung Harbor**
+- **Liuhe Night Market**
+- **Kenting Beach**
+- **Anping Old Street**
+:::
+
+::: {.column width="58%"}
+<div class="photo-grid">
+  <img src="images/south1.jpg">
+  <img src="images/south2.jpg">
+  <img src="images/south3.jpg">
+  <img src="images/south4.jpg">
+</div>
+:::
+
+:::
+
+---
+
+## East Taiwan
+
+::: {.columns}
+
+::: {.column width="42%"}
+### Must-visit spots
+- **Taroko Gorge**
+- **Qixingtan Beach**
+- **Brown Avenue**
+- **Sanxiantai**
+:::
+
+::: {.column width="58%"}
+<div class="photo-grid">
+  <img src="images/east1.jpg">
+  <img src="images/east2.jpg">
+  <img src="images/east3.jpg">
+  <img src="images/east4.jpg">
+</div>
+:::
+
+:::
+
+---
+
+##  Why Visit Taiwan?
+
+- Amazing food
+- Friendly people
+- Diverse landscapes
+
+Taiwan is small but full of unforgettable experiences
+
+<div style="text-align:center; margin-top:50px;">
+  <img src="images/explore4.jpg"width="400px">
+</div>
