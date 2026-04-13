@@ -1,6 +1,6 @@
 ---
 title: "Explore Taiwan 🇹🇼"
-image: images/taiwan_collage.jpg
+image: /projects/project1/images/taiwan_collage.jpg
 ---
 
 ## Explore Taiwan
