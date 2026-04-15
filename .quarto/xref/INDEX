@@ -19,5 +19,14 @@
   },
   "projects/project1/slides.qmd": {
     "slides.html": "c570cf64"
+  },
+  "posts/hw1-ab-testing/index.qmd": {
+    "index.html": "e6ec0091"
+  },
+  "Assignment/hw1_questions.qmd": {
+    "hw1_questions.html": "6404a145"
+  },
+  "blog.qmd": {
+    "blog.html": "03d8c2e0"
   }
 }
