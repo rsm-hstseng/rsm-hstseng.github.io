@@ -190,7 +190,7 @@ print(rf_11.summary())
 
 ```
 
-### Comparison
+## Comparison
 
 Comparing the naive OLS and reduced-form estimates, the results change both in magnitude and sign. The OLS estimates suggest a positive relationship between class size and test scores, implying that larger classes are associated with better performance. However, this result is likely driven by selection bias.
 
