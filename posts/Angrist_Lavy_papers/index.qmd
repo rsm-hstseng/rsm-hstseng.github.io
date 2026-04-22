@@ -265,7 +265,7 @@ plt.show()
 ```
 
 ## Conclusion
-Using Maimonides’ Rule, this paper finds that smaller class sizes improve student achievement, particularly in reading. While naive OLS results are biased, the regression discontinuity approach provides more credible evidence of a negative causal effect of class size. Overall, the study highlights the importance of using proper identification strategies in empirical research.
+Using Maimonides’ Rule, this paper finds that smaller class sizes improve student achievement, particularly in reading. While naive OLS results are biased, the regression discontinuity approach provides more credible evidence of a negative causal effect of class size.
 
 ## Reference
 

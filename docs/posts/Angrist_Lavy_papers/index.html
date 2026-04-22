@@ -168,8 +168,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#figure-1-5th-grade---intuition" id="toc-figure-1-5th-grade---intuition" class="nav-link" data-scroll-target="#figure-1-5th-grade---intuition">Figure 1 (5th grade) - intuition</a></li>
   <li><a href="#table-ii---naive-ols" id="toc-table-ii---naive-ols" class="nav-link" data-scroll-target="#table-ii---naive-ols">Table II - Naive OLS</a></li>
   <li><a href="#table-iii---rdd" id="toc-table-iii---rdd" class="nav-link" data-scroll-target="#table-iii---rdd">Table III - RDD</a></li>
-  <li><a href="#comparison" id="toc-comparison" class="nav-link" data-scroll-target="#comparison">Comparison</a></li>
   </ul></li>
+  <li><a href="#comparison" id="toc-comparison" class="nav-link" data-scroll-target="#comparison">Comparison</a></li>
   <li><a href="#something-additional" id="toc-something-additional" class="nav-link" data-scroll-target="#something-additional">Something Additional</a></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   <li><a href="#reference" id="toc-reference" class="nav-link" data-scroll-target="#reference">Reference</a></li>
@@ -228,7 +228,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Figure 1 shows how Maimonides’ Rule creates variation in class size based on enrollment. As enrollment increases, class size rises until it reaches 40 students. Once enrollment passes this threshold, classes are split, causing a sudden drop in average class size.</p>
 <p>This creates a sawtooth pattern: class size increases smoothly but drops sharply at cutoffs like 40 and 80. Schools just below and above these cutoffs are very similar, except for class size.</p>
 <p>This discontinuity provides useful variation that allows us to estimate the causal effect of class size using a regression discontinuity design.</p>
-<div id="d5c2d441" class="cell" data-execution_count="1">
+<div id="a07d28f6" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -305,7 +305,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="figure-1-5th-grade---intuition" class="level3">
 <h3 class="anchored" data-anchor-id="figure-1-5th-grade---intuition">Figure 1 (5th grade) - intuition</h3>
-<div id="d621703d" class="cell" data-execution_count="2">
+<div id="b2fe1985" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -384,7 +384,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="table-ii---naive-ols">Table II - Naive OLS</h3>
 <p>A simple OLS regression of test scores on class size is first estimated. This shows the basic relationship between class size and student achievement in the data.</p>
 <p>However, this estimate may be biased because class size is not randomly assigned. Schools with different class sizes may also differ in student background or other factors that affect test scores. Therefore, the OLS results reflect correlation, not necessarily a causal effect.</p>
-<div id="19e8f037" class="cell" data-execution_count="3">
+<div id="94b5ead2" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> run_ols(data, y, x):</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    temp <span class="op">=</span> data[[y] <span class="op">+</span> x].dropna()</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> sm.add_constant(temp[x])</span>
@@ -406,7 +406,7 @@ Dep. Variable:                avgverb   R-squared:                       0.012
 Model:                            OLS   Adj. R-squared:                  0.011
 Method:                 Least Squares   F-statistic:                     20.85
 Date:                Wed, 22 Apr 2026   Prob (F-statistic):           5.27e-06
-Time:                        00:07:15   Log-Likelihood:                -7173.0
+Time:                        00:24:15   Log-Likelihood:                -7173.0
 No. Observations:                2055   AIC:                         1.435e+04
 Df Residuals:                    2053   BIC:                         1.436e+04
 Df Model:                           1                                         
@@ -431,7 +431,7 @@ Dep. Variable:                avgmath   R-squared:                       0.024
 Model:                            OLS   Adj. R-squared:                  0.023
 Method:                 Least Squares   F-statistic:                     41.22
 Date:                Wed, 22 Apr 2026   Prob (F-statistic):           1.69e-10
-Time:                        00:07:15   Log-Likelihood:                -7353.5
+Time:                        00:24:15   Log-Likelihood:                -7353.5
 No. Observations:                2055   AIC:                         1.471e+04
 Df Residuals:                    2053   BIC:                         1.472e+04
 Df Model:                           1                                         
@@ -458,7 +458,7 @@ Notes:
 <h3 class="anchored" data-anchor-id="table-iii---rdd">Table III - RDD</h3>
 <p>This step uses Maimonides’ Rule to estimate the effect of class size. Instead of relying on actual class size directly, it uses the class size predicted by the rule, which depends only on enrollment.</p>
 <p>Because the rule creates sudden changes in class size at specific enrollment cutoffs, it provides a source of variation that is less likely to be related to student background or school quality. This makes the estimate more credible and closer to the true causal effect of class size on test scores.</p>
-<div id="3889df30" class="cell" data-execution_count="4">
+<div id="1ecd4bd6" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> run_rf(data, y, x):</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    temp <span class="op">=</span> data[[y] <span class="op">+</span> x].dropna()</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> sm.add_constant(temp[x])</span>
@@ -490,7 +490,7 @@ Dep. Variable:               classize   R-squared:                       0.642
 Model:                            OLS   Adj. R-squared:                  0.642
 Method:                 Least Squares   F-statistic:                     1701.
 Date:                Wed, 22 Apr 2026   Prob (F-statistic):               0.00
-Time:                        00:07:15   Log-Likelihood:                -5687.8
+Time:                        00:24:15   Log-Likelihood:                -5687.8
 No. Observations:                2059   AIC:                         1.138e+04
 Df Residuals:                    2056   BIC:                         1.140e+04
 Df Model:                           2                                         
@@ -518,7 +518,7 @@ Dep. Variable:                avgverb   R-squared:                       0.312
 Model:                            OLS   Adj. R-squared:                  0.311
 Method:                 Least Squares   F-statistic:                     335.3
 Date:                Wed, 22 Apr 2026   Prob (F-statistic):          9.71e-127
-Time:                        00:07:15   Log-Likelihood:                -6800.9
+Time:                        00:24:15   Log-Likelihood:                -6800.9
 No. Observations:                2055   AIC:                         1.361e+04
 Df Residuals:                    2052   BIC:                         1.362e+04
 Df Model:                           2                                         
@@ -546,7 +546,7 @@ Dep. Variable:                avgmath   R-squared:                       0.201
 Model:                            OLS   Adj. R-squared:                  0.201
 Method:                 Least Squares   F-statistic:                     215.8
 Date:                Wed, 22 Apr 2026   Prob (F-statistic):           8.56e-86
-Time:                        00:07:15   Log-Likelihood:                -7146.9
+Time:                        00:24:15   Log-Likelihood:                -7146.9
 No. Observations:                2055   AIC:                         1.430e+04
 Df Residuals:                    2052   BIC:                         1.432e+04
 Df Model:                           2                                         
@@ -569,18 +569,18 @@ Notes:
 </div>
 </div>
 </section>
-<section id="comparison" class="level3">
-<h3 class="anchored" data-anchor-id="comparison">Comparison</h3>
+</section>
+<section id="comparison" class="level2">
+<h2 class="anchored" data-anchor-id="comparison">Comparison</h2>
 <p>Comparing the naive OLS and reduced-form estimates, the results change both in magnitude and sign. The OLS estimates suggest a positive relationship between class size and test scores, implying that larger classes are associated with better performance. However, this result is likely driven by selection bias.</p>
 <p>In contrast, the reduced-form estimates based on Maimonides’ Rule show a negative relationship between class size and reading scores. This suggests that larger classes actually reduce student achievement once more credible variation is used.</p>
 <p>The key difference is that the OLS estimates capture correlations influenced by student background and school characteristics, while the reduced-form approach isolates variation in class size that is driven by enrollment rules. As a result, the reduced-form estimates provide a more reliable indication of the causal effect of class size.</p>
-</section>
 </section>
 <section id="something-additional" class="level2">
 <h2 class="anchored" data-anchor-id="something-additional">Something Additional</h2>
 <p>As an additional analysis, I plot average reading scores against enrollment to provide a visual complement to the regression results.</p>
 <p>The pattern appears to move in the opposite direction of class size. When enrollment crosses thresholds such as 40 or 80, class size drops, and test scores tend to increase. This mirrors the pattern observed in Figure 1.</p>
-<div id="7ee09ac2" class="cell" data-execution_count="5">
+<div id="9a38b8b2" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create enrollment bins (each 10 per bins)</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>df4[<span class="st">"enroll_bin"</span>] <span class="op">=</span> (df4[<span class="st">"cohsize"</span>] <span class="op">//</span> <span class="dv">10</span>) <span class="op">*</span> <span class="dv">10</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -646,7 +646,7 @@ Notes:
 </section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<p>Using Maimonides’ Rule, this paper finds that smaller class sizes improve student achievement, particularly in reading. While naive OLS results are biased, the regression discontinuity approach provides more credible evidence of a negative causal effect of class size. Overall, the study highlights the importance of using proper identification strategies in empirical research.</p>
+<p>Using Maimonides’ Rule, this paper finds that smaller class sizes improve student achievement, particularly in reading. While naive OLS results are biased, the regression discontinuity approach provides more credible evidence of a negative causal effect of class size.</p>
 </section>
 <section id="reference" class="level2">
 <h2 class="anchored" data-anchor-id="reference">Reference</h2>
