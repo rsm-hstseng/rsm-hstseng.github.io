@@ -28,5 +28,8 @@
   },
   "blog.qmd": {
     "blog.html": "03d8c2e0"
+  },
+  "posts/Angrist_Lavy_papers/index.qmd": {
+    "index.html": "4cc8b431"
   }
 }
