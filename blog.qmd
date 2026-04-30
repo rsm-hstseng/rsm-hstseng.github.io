@@ -8,4 +8,6 @@ listing:
 
 ## Blog
 
-Here are my blog posts.
+This page collects my course blog posts and project write-ups.
+
+The posts below document my work in data analysis, experimentation, and applied modeling.
