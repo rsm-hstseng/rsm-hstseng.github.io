@@ -341,13 +341,15 @@ model = sm.OLS(Y, X).fit()
 model.summary()
 ```
 
-The regression results confirm the findings from the previous analysis. The coefficient on the indicator variable (D) is approximately 0.038, which represents the difference in sign-up rates between CTA A and CTA B.
+The regression results confirm the findings from the previous analysis. The coefficient on the indicator variable (D) is approximately 0.038, which represents about a 3.8 percentage point difference in sign-up rates between CTA A and CTA B.
 
 This value is very close to the estimated difference we computed earlier using the difference in sample means, confirming that the two approaches produce the same result.
 
 The standard error of this estimate is about 0.018, and the corresponding t-statistic is approximately 2.14. The p-value is around 0.033, which is below the 0.05 significance level.
 
 Overall, this demonstrates that the regression approach produces the same inference as the two-sample hypothesis test, while also providing a flexible framework that can be extended to more complex settings.
+
+Because the outcome is binary, it may be helpful in practice to report robust standard errors, although this does not change the main conclusion.
 
 ## The Problem with Peeking
 
