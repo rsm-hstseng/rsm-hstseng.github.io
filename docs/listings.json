@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/hw3/hw3_questions.html",
       "/posts/Angrist_Lavy_papers/index.html",
       "/posts/hw1-ab-testing/index.html"
     ]
