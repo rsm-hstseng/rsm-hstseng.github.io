@@ -273,7 +273,7 @@ window.Quarto = {
 <p>In a real A/B test, we would not know the true sign-up probabilities ahead of time. We would only observe whether each visitor signed up or not, and then use the data to estimate the difference between the two CTAs. For this exercise, however, we set the probabilities ourselves so that we know the true answer and can study how our estimator behaves.</p>
 <p>Suppose the sign-up probability for CTA A is 0.22 and the sign-up probability for CTA B is 0.18. This means the true difference between the two groups is 0.04.</p>
 <p>Using Python, I simulate 1,000 visitors for each group. Each visitor either signs up (recorded as 1) or does not sign up (recorded as 0). These simulated data will be used in the sections that follow.</p>
-<div id="91155143" class="cell" data-execution_count="1">
+<div id="7570c770" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -307,7 +307,7 @@ window.Quarto = {
 Sample sign-up rate for CTA B: 0.178
 Estimated difference (A - B): 0.038</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="8">
+<div class="cell-output cell-output-display" data-execution_count="1">
 <div>
 
 
@@ -357,7 +357,7 @@ Estimated difference (A - B): 0.038</code></pre>
 <p>The Law of Large Numbers tells us that as the sample size increases, the sample average gets closer to the true value. In this A/B testing setting, this is important because our estimate is based on averages.</p>
 <p>To demonstrate this, I compute the difference between the outcomes in group A and group B for each observation. Then I calculate the running average of these differences as the sample size increases from 1 to 1,000.</p>
 <p>At the beginning, when only a few observations are included, the average fluctuates a lot. However, as more observations are added, the average becomes more stable and gradually approaches the true difference of 0.04.</p>
-<div id="4cb279a4" class="cell" data-execution_count="2">
+<div id="57c9c0b6" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -397,7 +397,7 @@ Estimated difference (A - B): 0.038</code></pre>
 <p>So far, we have focused on estimating the difference in sign-up rates between the two CTAs. However, a single estimate does not tell us how precise it is. To understand how much uncertainty there is, we need to measure how much our estimate could vary across different samples.</p>
 <p>One way to do this is through bootstrapping. The bootstrap is a resampling method that allows us to estimate the variability of a statistic without relying on a formula. The idea is simple: we repeatedly resample from our observed data (with replacement), compute the statistic each time, and then look at how much those results vary.</p>
 <p>In this case, I repeatedly resample from the CTA A and CTA B data, compute the difference in average sign-up rates for each resample, and use the distribution of those values to estimate the standard error.</p>
-<div id="1a277ddd" class="cell" data-execution_count="3">
+<div id="9f094872" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of bootstrap samples</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>n_boot <span class="op">=</span> <span class="dv">1000</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -428,7 +428,7 @@ Estimated difference (A - B): 0.038</code></pre>
 <span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>ci_upper <span class="op">=</span> theta_hat <span class="op">+</span> <span class="fl">1.96</span> <span class="op">*</span> boot_se</span>
 <span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>boot_se, se_analytical, ci_lower, ci_upper</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="10">
+<div class="cell-output cell-output-display" data-execution_count="3">
 <pre><code>(np.float64(0.017650398749036806),
  np.float64(0.017766823013696063),
  np.float64(0.003405218451887869),
@@ -445,7 +445,7 @@ Estimated difference (A - B): 0.038</code></pre>
 <p>The Central Limit Theorem (CLT) is one of the most important ideas in statistics. It tells us that even if the original data are not normally distributed, the sampling distribution of the sample mean becomes approximately normal when the sample size is large enough.</p>
 <p>In this A/B testing setting, each individual outcome is binary: a visitor either signs up (1) or does not sign up (0). That means the underlying data are Bernoulli, not Normal. However, the CLT tells us that if we repeatedly compute the difference in sample means across many simulated experiments, the distribution of those estimates will become more bell-shaped as the sample size increases.</p>
 <p>To illustrate this, I simulate the A/B test 1,000 times for several different sample sizes and plot the resulting distributions of the estimated difference in sign-up rates.</p>
-<div id="e432ba5c" class="cell" data-execution_count="4">
+<div id="6e455a4c" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -527,7 +527,7 @@ z = \frac{\hat{\theta} - 0}{SE(\hat{\theta})}
 <p>By the Central Limit Theorem, the estimated difference is approximately normally distributed when the sample size is large. Under the null hypothesis, its mean is 0. When we divide by its standard deviation, the result follows a standard Normal distribution.</p>
 <p>This allows us to compute a p-value, which tells us how likely it is to observe a difference as large as the one we found if the null hypothesis were true.</p>
 <p>This procedure is often referred to as a t-test. However, in this setting the data are not Normally distributed, so there is no exact t-distribution result. Instead, we rely on the Central Limit Theorem, which makes the test closer to a z-test. In practice, for large samples, the difference between the two is very small.</p>
-<div id="678cbcb0" class="cell" data-execution_count="5">
+<div id="38cf3d1d" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># z-statistic</span></span>
@@ -537,7 +537,7 @@ z = \frac{\hat{\theta} - 0}{SE(\hat{\theta})}
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>p_value <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> stats.norm.cdf(<span class="bu">abs</span>(z_stat)))</span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>z_stat, p_value</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="12">
+<div class="cell-output cell-output-display" data-execution_count="5">
 <pre><code>(np.float64(2.1388179513414762), np.float64(0.032450415036087366))</code></pre>
 </div>
 </div>
@@ -569,7 +569,7 @@ E[Y_i \mid D_i = 1] = \beta_0 + \beta_1
 \beta_1 = \bar{X}_A - \bar{X}_B = \hat{\theta}
 \]</span></p>
 <p>which is exactly the same as the difference in sample means that we computed earlier.</p>
-<div id="9a223b97" class="cell" data-execution_count="6">
+<div id="9fc7f494" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create indicator variable: 1 = A, 0 = B</span></span>
@@ -586,7 +586,7 @@ E[Y_i \mid D_i = 1] = \beta_0 + \beta_1
 <span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Show results</span></span>
 <span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>model.summary()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="13">
+<div class="cell-output cell-output-display" data-execution_count="6">
 <table class="simpletable caption-top table table-sm table-striped small">
 <caption>OLS Regression Results</caption>
 <tbody>
@@ -610,13 +610,13 @@ E[Y_i \mid D_i = 1] = \beta_0 + \beta_1
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">Date:</th>
-<td>Tue, 14 Apr 2026</td>
+<td>Thu, 28 May 2026</td>
 <th data-quarto-table-cell-role="th">Prob (F-statistic):</th>
 <td>0.0327</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">Time:</th>
-<td>22:47:01</td>
+<td>16:36:37</td>
 <th data-quarto-table-cell-role="th">Log-Likelihood:</th>
 <td>-991.64</td>
 </tr>
@@ -712,10 +712,11 @@ E[Y_i \mid D_i = 1] = \beta_0 + \beta_1
 <br><br>Notes:<br>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
 </div>
 </div>
-<p>The regression results confirm the findings from the previous analysis. The coefficient on the indicator variable (D) is approximately 0.038, which represents the difference in sign-up rates between CTA A and CTA B.</p>
+<p>The regression results confirm the findings from the previous analysis. The coefficient on the indicator variable (D) is approximately 0.038, which represents about a 3.8 percentage point difference in sign-up rates between CTA A and CTA B.</p>
 <p>This value is very close to the estimated difference we computed earlier using the difference in sample means, confirming that the two approaches produce the same result.</p>
 <p>The standard error of this estimate is about 0.018, and the corresponding t-statistic is approximately 2.14. The p-value is around 0.033, which is below the 0.05 significance level.</p>
 <p>Overall, this demonstrates that the regression approach produces the same inference as the two-sample hypothesis test, while also providing a flexible framework that can be extended to more complex settings.</p>
+<p>Because the outcome is binary, it may be helpful in practice to report robust standard errors, although this does not change the main conclusion.</p>
 </section>
 <section id="the-problem-with-peeking" class="level2">
 <h2 class="anchored" data-anchor-id="the-problem-with-peeking">The Problem with Peeking</h2>
@@ -723,7 +724,7 @@ E[Y_i \mid D_i = 1] = \beta_0 + \beta_1
 <p>At first glance, this might seem reasonable. However, this approach creates a serious problem in classical frequentist statistics. A single hypothesis test at the 5% significance level has a 5% chance of producing a false positive when the null hypothesis is true. But if we repeatedly test the data as it accumulates, each additional test increases the chance of incorrectly rejecting the null hypothesis.</p>
 <p>In other words, peeking at the data inflates the overall false positive rate. Instead of having a 5% chance of making a mistake, the probability of at least one false rejection across multiple tests becomes much larger.</p>
 <p>To demonstrate this, I simulate a scenario where the null hypothesis is actually true, meaning there is no difference between the two CTAs.</p>
-<div id="94c765ff" class="cell" data-execution_count="7">
+<div id="3768fb04" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -775,7 +776,7 @@ E[Y_i \mid D_i = 1] = \beta_0 + \beta_1
 <span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a>false_positive_rate <span class="op">=</span> false_positive_count <span class="op">/</span> n_experiments</span>
 <span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a>false_positive_rate</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="14">
+<div class="cell-output cell-output-display" data-execution_count="7">
 <pre><code>0.1864</code></pre>
 </div>
 </div>
