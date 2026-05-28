@@ -4,14 +4,14 @@
     "href": "blog.html",
     "title": "Blog",
     "section": "",
-    "text": "Here are my blog posts."
+    "text": "This page collects my course blog posts and project write-ups.\nThe posts below document my work in data analysis, experimentation, and applied modeling."
   },
   {
     "objectID": "blog.html#blog",
     "href": "blog.html#blog",
     "title": "Blog",
     "section": "",
-    "text": "Here are my blog posts."
+    "text": "This page collects my course blog posts and project write-ups.\nThe posts below document my work in data analysis, experimentation, and applied modeling."
   },
   {
     "objectID": "index.html",
@@ -228,7 +228,7 @@
     "href": "projects.html",
     "title": "My Projects",
     "section": "",
-    "text": "Explore Taiwan 🇹🇼\n\n\n\n\n\n\nMolly Tseng\n\n\n\n\n\n\nNo matching items"
+    "text": "Explore Taiwan 🇹🇼\n\n\n\n\n\n\nMolly Tseng\n\n\n\n\n\n\n\n\n\n\n\nFOMO Marketing\n\n\n\n\n\n\nMolly Tseng\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "about.html",
@@ -1090,5 +1090,12 @@
     "title": "FOMO Marketing",
     "section": "",
     "text": "Thank you\n  Questions?\n  FOMO Marketing · The Psychology of Now\n  \n  \n    Consumer Psychology\n    Behavioral Marketing\n    Digital Strategy"
+  },
+  {
+    "objectID": "projects/project2/index.html",
+    "href": "projects/project2/index.html",
+    "title": "FOMO Marketing",
+    "section": "",
+    "text": "FOMO Marketing\nA RevealJS presentation about consumer psychology, urgency, and digital marketing strategy.\nView Presentation"
   }
 ]

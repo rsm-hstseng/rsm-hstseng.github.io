@@ -1,0 +1,10 @@
+---
+title: "FOMO Marketing"
+author: "Molly Tseng"
+---
+
+# FOMO Marketing
+
+A RevealJS presentation about consumer psychology, urgency, and digital marketing strategy.
+
+[View Presentation](HsiangLing_Tseng-fomo_marketing.html)

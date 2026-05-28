@@ -2,7 +2,8 @@
   {
     "listing": "/blog.html",
     "items": [
-      "/posts/hw3/hw3_questions.html",
+      "/posts/hw4/hw4_questions.html",
+      "/posts/hw3/index.html",
       "/posts/Angrist_Lavy_papers/index.html",
       "/posts/hw1-ab-testing/index.html"
     ]
@@ -10,7 +11,8 @@
   {
     "listing": "/projects.html",
     "items": [
-      "/projects/project1/index.html"
+      "/projects/project1/index.html",
+      "/projects/project2/index.html"
     ]
   }
 ]
