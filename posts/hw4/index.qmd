@@ -2,7 +2,7 @@
 title: "MaxDiff Analysis of MSBA Class Preferences"
 subtitle: "Counts, MLE, and Bayesian estimation of the MNL model"
 author: "Molly Tseng"
-date: May28
+date: May28, 2026
 ---
 
 
