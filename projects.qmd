@@ -3,5 +3,6 @@ title: "My Projects"
 listing:
   contents:
     - projects/project1/index.qmd
+    - projects/project2/HsiangLing_Tseng-fomo_marketing.qmd
   type: grid
 ---
