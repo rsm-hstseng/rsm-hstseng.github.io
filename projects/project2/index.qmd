@@ -1,10 +1,9 @@
 ---
 title: "FOMO Marketing"
 author: "Molly Tseng"
+image: fomo.png
 ---
 
-# FOMO Marketing
+<meta http-equiv="refresh" content="0; url=HsiangLing_Tseng-fomo_marketing.html" />
 
-A RevealJS presentation about consumer psychology, urgency, and digital marketing strategy.
-
-[View Presentation](HsiangLing_Tseng-fomo_marketing.html)
+# Redirecting...
