@@ -128,7 +128,7 @@
 }
 .brand-tactic {
   font-family:'Inter',sans-serif; font-size:1.05em; font-weight:300;
-  color:var(--cm); line-height:1.42; flex:1;
+  color:var(--cm); line-height:1.42; min-height:150px;flex:0;
 }
 .brand-quote {
   font-family:'JetBrains Mono',monospace; font-size:0.9em; color:var(--cr);
@@ -348,4 +348,16 @@
   padding:1em 1.1em;
 
   border-radius:0 8px 8px 0;
+}
+
+.brand-img {
+  width:100%;
+  height:120px;
+  object-fit:cover;
+  object-position:center;
+  display:block;
+  border-radius:8px;
+  margin-top:1em;
+  margin-bottom:1em;
+  border:1px solid rgba(201,150,58,0.15);
 }
