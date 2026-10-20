@@ -1,0 +1,87 @@
+/* Spotify project page */
+:root {
+  --sp-accent: #1a8f4a;
+  --sp-accent-soft: #e9f6ee;
+  --sp-ink: #14171a;
+  --sp-ink2: #52514e;
+  --sp-line: #e6e5e0;
+  --sp-surface: #fcfcfb;
+}
+
+body { font-family: 'Inter', -apple-system, 'Helvetica Neue', Arial, sans-serif; color: var(--sp-ink); }
+main h2 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 700; font-size: 2rem; margin-top: 3rem;
+  padding-bottom: .4rem; border-bottom: 1px solid var(--sp-line);
+}
+main h3 { font-weight: 600; font-size: 1.15rem; margin-top: 2rem; }
+
+/* hero */
+.sp-hero {
+  background: linear-gradient(135deg, #0f1a14 0%, #14281c 55%, #1a8f4a 160%);
+  color: #f3f1ec; border-radius: 18px;
+  padding: 2rem 2rem 1.6rem; margin: .5rem 0 2.2rem;
+}
+.sp-hero .sp-kicker {
+  font-family: 'JetBrains Mono', monospace; font-size: .72rem;
+  letter-spacing: .14em; text-transform: uppercase; color: #8fd9aa;
+}
+.sp-hero .sp-question {
+  font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.75rem;
+  line-height: 1.25; font-weight: 600; margin: .5rem 0 1.4rem; color: #fff;
+}
+.sp-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: .8rem; }
+.sp-stat {
+  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12);
+  border-radius: 12px; padding: .8rem 1rem;
+}
+.sp-stat .v, .sp-stat .l, .sp-card .n, .sp-card .t { display: block; }
+.sp-stat .v { font-size: 1.6rem; font-weight: 600; color: #fff; line-height: 1.1; }
+.sp-stat .l { font-size: .78rem; color: rgba(243,241,236,.7); margin-top: .2rem; }
+.sp-tags { margin-top: 1.2rem; display: flex; flex-wrap: wrap; gap: .4rem; }
+.sp-tags span {
+  font-size: .72rem; padding: .2rem .6rem; border-radius: 99px;
+  border: 1px solid rgba(143,217,170,.4); color: #cdeed8;
+}
+
+/* key-finding cards */
+.sp-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 1.2rem 0 1rem; }
+.sp-card {
+  border: 1px solid var(--sp-line); border-top: 3px solid var(--sp-accent);
+  border-radius: 12px; padding: 1rem 1.1rem; background: var(--sp-surface);
+}
+.sp-card .n { font-family: 'JetBrains Mono', monospace; font-size: .7rem; color: var(--sp-accent); letter-spacing: .1em; }
+.sp-card .t { font-weight: 600; margin: .3rem 0 .35rem; }
+.sp-card p { font-size: .9rem; color: var(--sp-ink2); margin: 0; }
+
+/* pipeline */
+.sp-pipeline { display: flex; flex-wrap: wrap; gap: .5rem; align-items: stretch; margin: 1rem 0 1.5rem; }
+.sp-step {
+  flex: 1 1 140px; background: var(--sp-accent-soft); border-radius: 10px;
+  padding: .7rem .9rem; font-size: .85rem;
+}
+.sp-step p { margin: 0; }
+.sp-step strong { display: block; margin-bottom: .2rem; color: var(--sp-accent); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; }
+
+/* insight callout */
+.sp-insight {
+  border-left: 3px solid var(--sp-accent); background: var(--sp-accent-soft);
+  padding: .8rem 1.1rem; border-radius: 0 10px 10px 0; margin: 1rem 0 1.5rem;
+}
+.sp-insight p:last-child { margin-bottom: 0; }
+
+/* figures */
+main figure img, main .quarto-figure img { border-radius: 10px; border: 1px solid var(--sp-line); }
+main figcaption { font-size: .82rem; color: var(--sp-ink2); }
+
+/* tables */
+main table { font-size: .9rem; }
+main table th { font-weight: 600; border-bottom: 2px solid var(--sp-ink) !important; }
+main table td.best, main table .best { color: var(--sp-accent); font-weight: 600; }
+.table-wrap { overflow-x: auto; }
+
+@media (max-width: 600px) {
+  .sp-hero { padding: 1.4rem 1.2rem; }
+  .sp-hero .sp-question { font-size: 1.4rem; }
+  .sp-cards { grid-template-columns: 1fr; }
+}
