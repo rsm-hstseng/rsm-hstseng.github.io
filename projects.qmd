@@ -5,5 +5,6 @@ listing:
     - projects/project1/index.qmd
     - projects/project2/index.qmd
     - projects/project3/index.qmd
+    - projects/project4/index.qmd
   type: grid
 ---

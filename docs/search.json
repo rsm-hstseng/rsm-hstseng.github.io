@@ -445,7 +445,7 @@
     "href": "projects.html",
     "title": "My Projects",
     "section": "",
-    "text": "Explore Taiwan 🇹🇼\n\n\n\n\n\n\nMolly Tseng\n\n\n\n\n\n\n\n\n\n\n\n\n\nFOMO Marketing\n\n\n\n\n\n\nMolly Tseng\n\n\n\n\n\n\n\n\n\n\n\n\n\nWhat Makes a Hit? Spotify Song Popularity\n\n\nHypothesis testing, feature engineering and hit classification on 89K Spotify tracks.\n\n\n\nMolly Tseng\n\n\nJan 25, 2026\n\n\n\n\n\n\nNo matching items"
+    "text": "Explore Taiwan 🇹🇼\n\n\n\n\n\n\nMolly Tseng\n\n\n\n\n\n\n\n\n\n\n\n\n\nFOMO Marketing\n\n\n\n\n\n\nMolly Tseng\n\n\n\n\n\n\n\n\n\n\n\n\n\nNYC Property Tax Fraud Detection\n\n\nFeature engineering, PCA and an autoencoder to rank 1M+ NYC properties by how suspicious their valuations look.\n\n\n\nMolly Tseng\n\n\nMay 27, 2026\n\n\n\n\n\n\n\n\n\n\n\n\n\nWhat Makes a Hit? Spotify Song Popularity\n\n\nHypothesis testing, feature engineering and hit classification on 89K Spotify tracks.\n\n\n\nMolly Tseng\n\n\nJan 25, 2026\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "about.html",
@@ -579,5 +579,75 @@
     "title": "What Makes a Hit? Spotify Song Popularity",
     "section": "At a Glance",
     "text": "At a Glance\n\n\n01 Weak single signals\nEvery audio feature is statistically linked to popularity, but none explains much on its own (all |r| &lt; 0.15).\n\n\n02 Features &gt; models\nEngineered features lowered RMSE for every model. Switching from Random Forest to XGBoost changed almost nothing.\n\n\n03 Potential, not success\nModels pull every song toward the average. Audio captures whether a song sounds mainstream, not whether it becomes a hit.\n\n\n04 Reframe the task\nTreating the problem as a hit screen (classification) is more useful than predicting exact scores (regression)."
+  },
+  {
+    "objectID": "projects/project4/index.html",
+    "href": "projects/project4/index.html",
+    "title": "NYC Property Tax Fraud Detection",
+    "section": "",
+    "text": "Fraud analytics · Python\nWith no labelled fraud cases, how do you decide which of a million property records an investigator should look at first?\n\n\n1.07M property records\n\n\n29 engineered variables\n\n\n5 principal components\n\n\n10K investigation queue\n\n\n\npandas scikit-learn PCA Autoencoder matplotlib"
+  },
+  {
+    "objectID": "projects/project4/index.html#at-a-glance",
+    "href": "projects/project4/index.html#at-a-glance",
+    "title": "NYC Property Tax Fraud Detection",
+    "section": "At a Glance",
+    "text": "At a Glance\n\n\n01 No labels, so rank, don’t predict\nThere are no confirmed fraud cases to train on. The output is a ranked investigation queue, not a yes/no prediction.\n\n\n02 Value should scale with size\n29 ratio variables compare each property’s value with its lot, footprint and volume, relative to its ZIP code and tax-class peers.\n\n\n03 Two independent detectors\nA distance score finds linear outliers and an autoencoder finds non-linear ones. Their ranks are averaged into one Final Score.\n\n\n04 Built for investigators\nA heatmap shows why each property was flagged, and expert feedback can tighten the queue over time."
+  },
+  {
+    "objectID": "projects/project4/index.html#the-problem",
+    "href": "projects/project4/index.html#the-problem",
+    "title": "NYC Property Tax Fraud Detection",
+    "section": "The Problem",
+    "text": "The Problem\nNew York City’s property tax depends on accurate valuations for more than a million parcels. When an owner misreports a property (lot size, number of stories, building dimensions), its assessed value can drop artificially. That lowers their tax bill and shifts the burden onto everyone else.\nThere is no labelled data: nobody has marked which records are fraudulent. So this is an unsupervised problem. The goal is to find the records that are most statistically unusual compared with similar properties, and pass them to human investigators in priority order.\nData: NYC Property Valuation and Assessment Data (NYC Open Data): 1,070,994 records × 32 fields across all five boroughs.\n\n\n1 · Clean Exclude government land, impute hidden missing values\n\n\n2 · Engineer 29 value-to-size ratios, normalized against peers\n\n\n3 · Reduce Z-scale → PCA (5 PCs) → z-scale again\n\n\n4 · Score Minkowski distance + autoencoder error\n\n\n5 · Rank Average the ranks; top 10K → investigators"
+  },
+  {
+    "objectID": "projects/project4/index.html#data-cleaning",
+    "href": "projects/project4/index.html#data-cleaning",
+    "title": "NYC Property Tax Fraud Detection",
+    "section": "Data Cleaning",
+    "text": "Data Cleaning\n\nExclusions\nGovernment and institutional properties follow valuation rules that aren’t comparable to the private market, so they would generate false alarms. I removed:\n\nGovernment utility easements (EASEMENT = 'U')\nOwners matching keywords such as DEPT, GOVERNMENT, UNITED STATES and CEMETERY, plus named entities found among the most frequent owners (City of New York, Port Authority, NYS DOT, LIRR, NYC Transit, …)\n\n\n\nMissing values hide as zeros\n\nA taxable parcel can’t have zero frontage or be worth $0. These zeros are missing values in disguise, often condo units that share one building record. Dimensions and values were filled with a hierarchical peer-group mean: first the average for the same tax class, borough and building class, then progressively broader groups when a group was too sparse. Stories were filled with the most common value for the borough and building class.\nEXLAND is the exception. A zero there usually means “no exemption,” which is a legitimate value, so those zeros were kept. The only ones imputed were records that list an exemption code but show $0."
+  },
+  {
+    "objectID": "projects/project4/index.html#feature-engineering",
+    "href": "projects/project4/index.html#feature-engineering",
+    "title": "NYC Property Tax Fraud Detection",
+    "section": "Feature Engineering",
+    "text": "Feature Engineering\nCore idea: a bigger property should be proportionally more valuable. A property whose value doesn’t match its size, in either direction, is worth a look.\n\n\n\n\n÷ Lot area\n÷ Building footprint\n÷ Building volume\n\n\n\n\nFull market value\nr1\nr2\nr3\n\n\nAssessed land value\nr4\nr5\nr6\n\n\nAssessed total value\nr7\nr8\nr9\n\n\n\nEach ratio is divided by its median so that a typical property scores about 1. Then two steps make the ratios sensitive to the right things:\n# 1) Bidirectional: an owner who overstates lot size gets a suspiciously LOW ratio.\n#    Fold both tails into one: r = 0.1 becomes 10, so both directions look extreme.\ndata[var] = np.maximum(data[var], 1 / (data[var] + eps))\n\n# 2) Peer normalization: $/sq ft in Manhattan isn't suspicious; it is in Staten Island.\ndata[var + \"_zip5\"]     = data[var] / data.groupby(\"ZIP\")[var].transform(\"mean\")\ndata[var + \"_taxclass\"] = data[var] / data.groupby(\"TAXCLASS\")[var].transform(\"mean\")\nTwo sanity-check variables complete the set of 29:\n\nvalue_ratio: market value vs. assessed values. These are three valuations of the same property, so they should agree.\nsize_ratio: building footprint ÷ lot area. Anything above 1 is physically impossible."
+  },
+  {
+    "objectID": "projects/project4/index.html#dimensionality-reduction",
+    "href": "projects/project4/index.html#dimensionality-reduction",
+    "title": "NYC Property Tax Fraud Detection",
+    "section": "Dimensionality Reduction",
+    "text": "Dimensionality Reduction\nThe 29 variables are highly correlated (r1, r4 and r7 all measure value per lot area). Without dimensionality reduction, every redundant cluster would get counted several times.\n\n\nZ-scale all 29 variables so that dollar-scale fields don’t dominate.\nPCA down to 5 components, which keep 79% of the variance and drop the noisy tail.\nZ-scale again so each component counts equally. This makes the Euclidean distance in step 4 approximate a Mahalanobis distance."
+  },
+  {
+    "objectID": "projects/project4/index.html#two-anomaly-scores",
+    "href": "projects/project4/index.html#two-anomaly-scores",
+    "title": "NYC Property Tax Fraud Detection",
+    "section": "Two Anomaly Scores",
+    "text": "Two Anomaly Scores\n\n\n\nScore 1 · Minkowski distance\nA typical property sits near the origin of the 5-D component space. Score 1 is how far each property sits from it, measured in standard deviations.\n\\[s_1 = \\Big(\\sum_{k=1}^{5} |z_k|^{p}\\Big)^{1/p},\\quad p = 2\\]\n\n\nScore 2 · Autoencoder error\nA small neural network (5 → 3 → 5) learns to compress and rebuild normal properties. Records it can’t rebuild well don’t fit the learned pattern.\n\\[s_2 = \\lVert \\mathbf{z} - f(\\mathbf{z}) \\rVert_2\\]\n\n\n\nThe two scores are on different scales, so each is converted to a rank and the ranks are averaged 50/50 into a Final Score.\n\n\n\n\n\n\nWhy two detectors? They agree on most of the extreme tail: roughly three-quarters of their top-10K lists overlap. The autoencoder also catches some properties that are only moderately far from the center but have an unusual combination of features, which the distance score misses.\nRobustness check: switching the Minkowski power from p = 2 to p = 1 or p = 4 changes fewer than 4% of the top 10,000. The ranking doesn’t depend on that tuning choice."
+  },
+  {
+    "objectID": "projects/project4/index.html#results",
+    "href": "projects/project4/index.html#results",
+    "title": "NYC Property Tax Fraud Detection",
+    "section": "Results",
+    "text": "Results\n\nThe scores have an extremely long tail. Most properties sit close to their peers, while the top 10,000 (under 1% of records) sit a median of ~9 standard deviations away, and the most extreme sit hundreds away. These top records form the investigation queue.\n\nMost flagged properties have a value that doesn’t match their building size (footprint or volume), which points to misreported dimensions or story counts.\n\nExplaining every flag\n\nA score alone isn’t actionable, so investigators also get this heatmap. Each row is a flagged property and each bright cell is a variable that is far from normal. The row tells the investigator what to check. Rows #19–29 share the same pattern: a cluster of condo units in one Manhattan building all recorded with a market value of $18. One data-entry error repeated across many units shows up as a block of identical rows.\n\n\nWhat the top of the list looks like\n\n\nCASE A Impossible geometry\nThe #1 and #2 properties are small homes in Staten Island and Queens, on 25 × 91 ft and 25 × 100 ft lots. Their recorded building footprints are over 1,800 × 5,000 ft, far larger than the lots they stand on.\n\n\nCASE B Valuations that disagree\nA Brooklyn vacant lot worth $101K should be assessed at about $6K for tax purposes. Its recorded assessed value is $1.\n\n\nCASE C Gaps in the exclusion list\n#3 is the Metropolitan Museum of Art. It’s city-owned, but listed under “CULTURAL AFFAIRS,” so the government filter missed it.\n\n\nACTION Feedback loop\nCase C isn’t fraud. It’s a gap in the exclusion rules, and it’s exactly the feedback the model needs. Adding owners like this to the exclusion list and re-running tightens the queue."
+  },
+  {
+    "objectID": "projects/project4/index.html#how-it-improves-over-time",
+    "href": "projects/project4/index.html#how-it-improves-over-time",
+    "title": "NYC Property Tax Fraud Detection",
+    "section": "How It Improves Over Time",
+    "text": "How It Improves Over Time\nThe model is designed to get better as investigators review its output. In order of impact:\n\nExclusions: add benign categories found in review (city cultural institutions, air-rights lots, active redevelopment).\nVariables: encode expert fraud hypotheses directly, e.g. exemptions relative to how long they’ve been held, or assessments that barely changed despite a nearby sale.\nScore weights: once enough cases have been reviewed, adjust the 50/50 split toward the score that better predicts confirmed issues.\nTuning parameters (p, number of components): least important, since the ranking is robust to them."
+  },
+  {
+    "objectID": "projects/project4/index.html#tools",
+    "href": "projects/project4/index.html#tools",
+    "title": "NYC Property Tax Fraud Detection",
+    "section": "Tools",
+    "text": "Tools\nPython (pandas, NumPy, scikit-learn PCA and MLPRegressor, matplotlib) · NYC Open Data\nFigures on this page come from a reproducible re-run of the pipeline (random_state = 42)."
   }
 ]
