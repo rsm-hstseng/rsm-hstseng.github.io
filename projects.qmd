@@ -7,5 +7,6 @@ listing:
     - projects/project3/index.qmd
     - projects/project4/index.qmd
     - projects/project5/index.qmd
+    - projects/project6/index.qmd
   type: grid
 ---

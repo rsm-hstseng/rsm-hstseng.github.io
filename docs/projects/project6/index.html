@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Molly Tseng">
+<meta name="dcterms.date" content="2026-10-27">
+<meta name="description" content="Layered PostgreSQL models, growth decomposition and an explainable Category × Region opportunity score on 96K Olist orders, served in a Streamlit dashboard.">
+
+<title>Marketplace Growth Intelligence – Molly Tseng</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-158031087360bce0ff56dc785ce39e06.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="olist_style.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Molly Tseng</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../resume.html"> 
+<span class="menu-text">Resume</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../projects.html"> 
+<span class="menu-text">Projects</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#at-a-glance" id="toc-at-a-glance" class="nav-link active" data-scroll-target="#at-a-glance">At a Glance</a></li>
+  <li><a href="#the-problem" id="toc-the-problem" class="nav-link" data-scroll-target="#the-problem">The Problem</a></li>
+  <li><a href="#architecture" id="toc-architecture" class="nav-link" data-scroll-target="#architecture">Architecture</a></li>
+  <li><a href="#growth-volume-or-basket-size" id="toc-growth-volume-or-basket-size" class="nav-link" data-scroll-target="#growth-volume-or-basket-size">Growth: Volume or Basket Size?</a></li>
+  <li><a href="#category-seller-health" id="toc-category-seller-health" class="nav-link" data-scroll-target="#category-seller-health">Category &amp; Seller Health</a></li>
+  <li><a href="#strategic-opportunity-engine" id="toc-strategic-opportunity-engine" class="nav-link" data-scroll-target="#strategic-opportunity-engine">Strategic Opportunity Engine</a></li>
+  <li><a href="#data-quality-validation" id="toc-data-quality-validation" class="nav-link" data-scroll-target="#data-quality-validation">Data Quality &amp; Validation</a></li>
+  <li><a href="#performance-tuning" id="toc-performance-tuning" class="nav-link" data-scroll-target="#performance-tuning">Performance Tuning</a></li>
+  <li><a href="#dashboard" id="toc-dashboard" class="nav-link" data-scroll-target="#dashboard">Dashboard</a></li>
+  <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations">Limitations</a></li>
+  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next Steps</a></li>
+  <li><a href="#tools" id="toc-tools" class="nav-link" data-scroll-target="#tools">Tools</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Marketplace Growth Intelligence</h1>
+<p class="subtitle lead">A SQL pipeline and opportunity engine for a Brazilian e-commerce marketplace</p>
+  <div class="quarto-categories">
+    <div class="quarto-category">SQL</div>
+    <div class="quarto-category">Business Intelligence</div>
+    <div class="quarto-category">PostgreSQL</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    Layered PostgreSQL models, growth decomposition and an explainable Category × Region opportunity score on 96K Olist orders, served in a Streamlit dashboard.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Molly Tseng </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">October 27, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="sp-hero">
+<p><span class="sp-kicker">Personal project · SQL + Streamlit</span></p>
+<p><span class="sp-question">GMV is up, but how much of that comes from more orders and how much from bigger baskets? And which category in which state should the commercial team look at next?</span></p>
+<div class="sp-stats">
+<div class="sp-stat">
+<p><span class="v">96K</span> <span class="l">delivered orders</span></p>
+</div>
+<div class="sp-stat">
+<p><span class="v">R$13.2M</span> <span class="l">item GMV, 20 months</span></p>
+</div>
+<div class="sp-stat">
+<p><span class="v">153</span> <span class="l">scored Category × Region pairs</span></p>
+</div>
+<div class="sp-stat">
+<p><span class="v">0.00</span> <span class="l">max reconciliation gap</span></p>
+</div>
+</div>
+<div class="sp-tags">
+<p><span>PostgreSQL</span> <span>SQL · CTEs · window functions</span> <span>Python</span> <span>pandas</span> <span>SQLAlchemy</span> <span>Streamlit</span> <span>Plotly</span></p>
+</div>
+</div>
+<section id="at-a-glance" class="level2">
+<h2 class="anchored" data-anchor-id="at-a-glance">At a Glance</h2>
+<div class="sp-cards">
+<div class="sp-card">
+<p><span class="n">01</span> <span class="t">Volume, not basket size</span></p>
+<p>Order volume explains nearly all GMV growth. Over the period it added R$802K of month-over-month change while AOV pulled back R$75K.</p>
+</div>
+<div class="sp-card">
+<p><span class="n">02</span> <span class="t">São Paulo dominates</span></p>
+<p>8 of the top 10 Category × Region opportunities are in SP, led by health_beauty (score 72.9).</p>
+</div>
+<div class="sp-card">
+<p><span class="n">03</span> <span class="t">Rankings depend on priorities</span></p>
+<p>The Growth-focused weights keep 9 of the baseline top 10. The Balanced and Delivery-focused weights keep only 5.</p>
+</div>
+<div class="sp-card">
+<p><span class="n">04</span> <span class="t">Every layer reconciles</span></p>
+<p>Row counts, key uniqueness and GMV totals were checked from raw tables through to the marts. The growth decomposition closes to the cent.</p>
+</div>
+</div>
+</section>
+<section id="the-problem" class="level2">
+<h2 class="anchored" data-anchor-id="the-problem">The Problem</h2>
+<p>Marketplace leaders need more than a GMV line going up. They need to know <strong>what is driving growth</strong>, <strong>which categories carry it</strong>, whether supply depends on a handful of sellers, and <strong>where to invest commercial effort next</strong>.</p>
+<p>I used the <a href="https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce">Olist Brazilian E-Commerce Public Dataset</a> (about 100K orders, 9 related tables) to answer five questions:</p>
+<ol type="1">
+<li>How much growth comes from order volume versus average order value (AOV)?</li>
+<li>Which product categories contribute most to changes in GMV?</li>
+<li>Which categories depend on too few sellers?</li>
+<li>Which Category × Region combinations deserve a closer commercial look?</li>
+<li>How stable is that ranking when business priorities change?</li>
+</ol>
+<p><strong>Scope:</strong> delivered orders, January 2017 – August 2018. The headline metric is <strong>Item GMV</strong>, the sum of item prices excluding freight.</p>
+</section>
+<section id="architecture" class="level2">
+<h2 class="anchored" data-anchor-id="architecture">Architecture</h2>
+<p>The pipeline is built in PostgreSQL as five layers. Each layer only reads from the one before it.</p>
+<div class="sp-pipeline">
+<div class="sp-step">
+<p><strong>Raw</strong></p>
+<p>9 Olist CSVs loaded as-is into typed tables</p>
+</div>
+<div class="sp-step">
+<p><strong>Staging</strong></p>
+<p>Views that clean, cast and standardize keys</p>
+</div>
+<div class="sp-step">
+<p><strong>Core</strong></p>
+<p>Fact and dimension models at a fixed grain</p>
+</div>
+<div class="sp-step">
+<p><strong>Marts</strong></p>
+<p>Growth, category, seller and opportunity metrics</p>
+</div>
+<div class="sp-step">
+<p><strong>Dashboard</strong></p>
+<p>3-page Streamlit app on top of the marts</p>
+</div>
+</div>
+<div class="table-wrap">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Core model</th>
+<th>Grain</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>core.fct_orders</code></td>
+<td>One row per order</td>
+</tr>
+<tr class="even">
+<td><code>core.fct_order_items</code></td>
+<td>One row per order item</td>
+</tr>
+<tr class="odd">
+<td><code>core.dim_products</code></td>
+<td>One row per product</td>
+</tr>
+<tr class="even">
+<td><code>core.dim_customers</code></td>
+<td>One row per customer record</td>
+</tr>
+<tr class="odd">
+<td><code>core.dim_sellers</code></td>
+<td>One row per seller</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The most common way to get marketplace GMV wrong is a <strong>one-to-many join</strong>. An order with three items and two payments joins into six rows, which inflates the total. To prevent this, items and payments are <strong>aggregated to the order level separately</strong> before they are joined, and every dimension key is checked for uniqueness before it is used.</p>
+</section>
+<section id="growth-volume-or-basket-size" class="level2">
+<h2 class="anchored" data-anchor-id="growth-volume-or-basket-size">Growth: Volume or Basket Size?</h2>
+<p><a href="images/monthly_gmv.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="images/monthly_gmv.png" class="img-fluid" alt="Bar chart of monthly item GMV from January 2017 to August 2018 with a Black Friday spike in November 2017, plus a line chart of AOV that stays between 124 and 149 reais"></a></p>
+<p>GMV grew from R$112K in January 2017 to a plateau of about R$850K–980K per month in 2018. Over the same period, <strong>AOV barely moved</strong>: it stayed between R$124 and R$149 the whole time.</p>
+<p>Because <strong>GMV = Orders × AOV</strong>, each month’s change can be split exactly into a volume effect and an AOV effect:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- volume effect: new orders valued at last month's AOV</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>(order_count <span class="op">-</span> previous_orders) <span class="op">*</span> previous_aov                  <span class="kw">AS</span> volume_effect,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">-- AOV effect: change in basket size applied to this month's orders</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>(aov <span class="op">-</span> previous_aov) <span class="op">*</span> order_count                              <span class="kw">AS</span> aov_effect,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">-- must be zero for every month</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>gmv_change <span class="op">-</span> (volume_effect <span class="op">+</span> aov_effect)                       <span class="kw">AS</span> reconciliation_difference</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><a href="images/growth_decomposition.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="images/growth_decomposition.png" class="img-fluid" alt="Stacked bar chart of monthly GMV change split into order volume effect and AOV effect"></a></p>
+<div class="sp-insight">
+<p><strong>Growth here is an acquisition story, not a basket-size story.</strong> Across 19 comparable months, the volume effect adds up to <strong>+R$802K</strong> and the AOV effect to <strong>−R$75K</strong>. The biggest swings, the November 2017 Black Friday spike and the December drop that followed, are almost entirely changes in order count. To grow GMV further, the levers to test are traffic and conversion before cross-sell or pricing.</p>
+</div>
+</section>
+<section id="category-seller-health" class="level2">
+<h2 class="anchored" data-anchor-id="category-seller-health">Category &amp; Seller Health</h2>
+<p>health_beauty, watches_gifts and bed_bath_table are the three largest categories, at R$1.0M–1.2M of GMV each over the period. Concentration is measured with the <strong>Herfindahl-Hirschman Index (HHI)</strong>, the sum of squared seller GMV shares. An HHI near 0 means many small sellers. An HHI of 1 means a single seller.</p>
+<p><a href="images/seller_concentration.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="images/seller_concentration.png" class="img-fluid" alt="Scatter plot of category GMV versus seller HHI for the 15 largest categories; office_furniture is the only one above 0.25"></a></p>
+<p>Most large categories have dozens to 140+ active sellers and an HHI below 0.15, so losing any one seller would not hurt them much. <strong>office_furniture is the clear exception</strong>: about 9 active sellers, HHI ≈ 0.43, and a top seller holding ~60% of GMV. That is a supply risk worth watching, though HHI alone does not prove one.</p>
+</section>
+<section id="strategic-opportunity-engine" class="level2">
+<h2 class="anchored" data-anchor-id="strategic-opportunity-engine">Strategic Opportunity Engine</h2>
+<p>To compare growth across categories and states, every eligible <strong>Category × Region</strong> pair gets a transparent weighted score that compares 2018 Q2 with Q1:</p>
+<div class="table-wrap">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Component</th>
+<th style="text-align: right;">Weight</th>
+<th>What it measures</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Growth momentum</td>
+<td style="text-align: right;">35%</td>
+<td>Quarter-over-quarter GMV growth</td>
+</tr>
+<tr class="even">
+<td>Market scale</td>
+<td style="text-align: right;">25%</td>
+<td>Q2 item GMV</td>
+</tr>
+<tr class="odd">
+<td>Seller diversification</td>
+<td style="text-align: right;">20%</td>
+<td>1 − normalized seller HHI</td>
+</tr>
+<tr class="even">
+<td>Delivery reliability</td>
+<td style="text-align: right;">20%</td>
+<td>On-time delivery rate</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Each component is min-max normalized to 0–100 before weighting. To keep small samples from producing extreme growth rates, a pair is <strong>eligible only if</strong> it has ≥ 20 orders in both quarters, ≥ 3 active sellers in Q2, ≥ 20 orders with usable delivery dates, and ≥ 80% delivery-data coverage. <strong>153 pairs</strong> pass.</p>
+<p><a href="images/opportunity_top10.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="images/opportunity_top10.png" class="img-fluid" alt="Stacked horizontal bars showing how growth, scale, diversification and delivery contribute to each of the top 10 opportunity scores"></a></p>
+<p>Breaking each score into its components makes the ranking explainable. There are two kinds of top opportunity:</p>
+<ul>
+<li><strong>Scaled, steady leaders</strong> such as health_beauty, bed_bath_table and watches_gifts in SP. They score on market size and a diversified seller base.</li>
+<li><strong>Fast-growing niches</strong> such as books_general_interest in SP and electronics in SC. Almost all of their score is growth momentum, from a small base.</li>
+</ul>
+<p>These two groups call for different actions: defend and deepen the leaders, and validate the niches before investing.</p>
+<section id="how-stable-is-the-ranking" class="level3">
+<h3 class="anchored" data-anchor-id="how-stable-is-the-ranking">How stable is the ranking?</h3>
+<p>The weights are an analyst’s choice, so I re-ranked all 153 pairs under three other weighting schemes and tracked where the baseline top 10 ended up.</p>
+<p><a href="images/sensitivity.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="images/sensitivity.png" class="img-fluid" alt="Grid showing the rank of each baseline top-10 opportunity under Baseline, Growth-focused, Balanced and Delivery-focused weightings"></a></p>
+<div class="sp-insight">
+<p><strong>The top 4 are robust. The rest depend on priorities.</strong> health_beauty, bed_bath_table, watches_gifts and housewares in SP stay in the top 10 under every scenario. The growth-driven niches are fragile: books_general_interest in SP falls from <strong>#6 to #47</strong> once growth is weighted equally with the other components. <strong>Recommendation:</strong> treat the top 4 as a high-confidence shortlist, and agree on the business priority (growth versus reliability) before acting on positions 5–10.</p>
+</div>
+</section>
+</section>
+<section id="data-quality-validation" class="level2">
+<h2 class="anchored" data-anchor-id="data-quality-validation">Data Quality &amp; Validation</h2>
+<p>Every layer has its own validation SQL (<code>07_validate_growth_marts.sql</code>, <code>10_validate_opportunity_engine.sql</code>, <code>14_validate_sensitivity.sql</code>):</p>
+<div class="table-wrap">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Check</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Raw → staging → core row counts</td>
+<td>Match</td>
+</tr>
+<tr class="even">
+<td>Key uniqueness (orders, items, products, dimensions)</td>
+<td>No duplicates</td>
+</tr>
+<tr class="odd">
+<td>Item GMV: raw = core = base mart = monthly = category = region</td>
+<td>All totals match</td>
+</tr>
+<tr class="even">
+<td>Month coverage</td>
+<td>All 20 months present</td>
+</tr>
+<tr class="odd">
+<td>Growth decomposition: volume + AOV = GMV change</td>
+<td>Max difference 0.000000</td>
+</tr>
+<tr class="even">
+<td>Opportunity scores in 0–100, no duplicate pairs, no threshold violations</td>
+<td>0 failures</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="performance-tuning" class="level2">
+<h2 class="anchored" data-anchor-id="performance-tuning">Performance Tuning</h2>
+<p>The first version of the opportunity ranking query ran for <strong>more than 10 minutes</strong>: one statement with nested joins, <code>COUNT(DISTINCT …)</code> and window functions over the full item table. I fixed it by:</p>
+<ul>
+<li>Simplifying the staging orders view once uniqueness checks showed the extra de-duplication logic was unnecessary.</li>
+<li><strong>Materializing</strong> the shared item-level base (<code>marts.mv_base_growth_items</code>) and the opportunity scores, and adding supporting indexes.</li>
+<li>Reusing the precomputed scores for the sensitivity analysis instead of recomputing each scenario from raw data.</li>
+</ul>
+<p>After these changes, the ranking and all sensitivity scenarios return quickly enough to power the dashboard interactively.</p>
+</section>
+<section id="dashboard" class="level2">
+<h2 class="anchored" data-anchor-id="dashboard">Dashboard</h2>
+<p>A three-page <strong>Streamlit</strong> app reads directly from the marts:</p>
+<ol type="1">
+<li><strong>Growth Overview:</strong> monthly KPIs, GMV, order and AOV trends, and the volume vs.&nbsp;AOV decomposition.</li>
+<li><strong>Category &amp; Seller Health:</strong> category GMV and growth contribution, active sellers, HHI and top-seller share.</li>
+<li><strong>Opportunity Explorer:</strong> pick a weighting strategy, browse the ranked pairs with score explanations, check ranking stability and export to CSV.</li>
+</ol>
+</section>
+<section id="limitations" class="level2">
+<h2 class="anchored" data-anchor-id="limitations">Limitations</h2>
+<ul>
+<li>The data is historical (2017–2018) and does not describe today’s market.</li>
+<li>Item GMV excludes freight, discounts and returns. It is not revenue or profit.</li>
+<li>Filtering to delivered orders can bias recent months, where some orders had not been delivered yet.</li>
+<li>Weights and eligibility thresholds are analyst-defined. The scores are relative priorities, not forecasts or causal estimates.</li>
+</ul>
+</section>
+<section id="next-steps" class="level2">
+<h2 class="anchored" data-anchor-id="next-steps">Next Steps</h2>
+<ul>
+<li>Let users set their own scoring weights in the dashboard, and test sensitivity to the eligibility thresholds as well.</li>
+<li>Automated data-quality tests (e.g.&nbsp;dbt tests) in place of hand-run validation queries.</li>
+<li>Formal before/after query benchmarks for the performance work.</li>
+<li>A hosted demo backed by a small cloud Postgres instance.</li>
+</ul>
+</section>
+<section id="tools" class="level2">
+<h2 class="anchored" data-anchor-id="tools">Tools</h2>
+<p>PostgreSQL (CTEs, window functions, views, materialized views, indexes) · Python (pandas, SQLAlchemy, psycopg) · Streamlit · Plotly</p>
+<!-- TODO: add the GitHub link once the repo is pushed, e.g.
+[View the code on GitHub](https://github.com/<username>/<repo>){.btn .btn-outline-primary}
+-->
+<p><em>Figures on this page come from the project’s PostgreSQL marts. This is an independent portfolio project and is not affiliated with Olist.</em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
+
+
+</body></html>
