@@ -228,6 +228,20 @@ A three-page **Streamlit** app reads directly from the marts:
 2. **Category & Seller Health:** category GMV and growth contribution, active sellers, HHI and top-seller share.
 3. **Opportunity Explorer:** pick a weighting strategy, browse the ranked pairs with score explanations, check ranking stability and export to CSV.
 
+::: {.panel-tabset}
+### Growth Overview
+![](images/dashboard_growth_overview.png){fig-alt="Streamlit Growth Overview page with month selector, four KPI cards, a business insight box and the monthly GMV trend"}
+
+### Opportunity Ranking
+![](images/dashboard_opportunity_ranking.png){fig-alt="Opportunity Explorer page with strategy filters in the sidebar, KPI cards and a bar chart of the top ranked Category × Region opportunities"}
+
+### Score Explanation
+![](images/dashboard_score_explanation.png){fig-alt="Score explanation for books_general_interest in SP: growth momentum contributes 35 of its 58 points, market scale and seller diversification almost nothing"}
+
+### Category Health
+![](images/dashboard_category_growth_contribution.png){fig-alt="Side-by-side bar charts of the categories with the largest GMV increases and decreases in August 2018"}
+:::
+
 ## Limitations
 
 - The data is historical (2017–2018) and does not describe today's market.

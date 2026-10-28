@@ -725,7 +725,7 @@
     "href": "projects/project6/index.html",
     "title": "Marketplace Growth Intelligence",
     "section": "",
-    "text": "Personal project · SQL + Streamlit\nGMV is up, but how much of that comes from more orders and how much from bigger baskets? And which category in which state should the commercial team look at next?\n\n\n96K delivered orders\n\n\nR$13.2M item GMV, 20 months\n\n\n153 scored Category × Region pairs\n\n\n0.00 max reconciliation gap\n\n\n\nPostgreSQL SQL · CTEs · window functions Python pandas SQLAlchemy Streamlit Plotly"
+    "text": "Personal project · SQL + Streamlit\nGMV is up, but how much of that comes from more orders and how much from bigger baskets? And which category in which state should the commercial team look at next?\n\n\n96K delivered orders\n\n\nR$13.2M item GMV, 20 months\n\n\n153 scored Category × Region pairs\n\n\n0.00 max reconciliation gap\n\n\n\nPostgreSQL SQL · CTEs · window functions Python pandas SQLAlchemy Streamlit Plotly\n\nView the code on GitHub →"
   },
   {
     "objectID": "projects/project6/index.html#at-a-glance",
@@ -788,7 +788,7 @@
     "href": "projects/project6/index.html#dashboard",
     "title": "Marketplace Growth Intelligence",
     "section": "Dashboard",
-    "text": "Dashboard\nA three-page Streamlit app reads directly from the marts:\n\nGrowth Overview: monthly KPIs, GMV, order and AOV trends, and the volume vs. AOV decomposition.\nCategory & Seller Health: category GMV and growth contribution, active sellers, HHI and top-seller share.\nOpportunity Explorer: pick a weighting strategy, browse the ranked pairs with score explanations, check ranking stability and export to CSV."
+    "text": "Dashboard\nA three-page Streamlit app reads directly from the marts:\n\nGrowth Overview: monthly KPIs, GMV, order and AOV trends, and the volume vs. AOV decomposition.\nCategory & Seller Health: category GMV and growth contribution, active sellers, HHI and top-seller share.\nOpportunity Explorer: pick a weighting strategy, browse the ranked pairs with score explanations, check ranking stability and export to CSV.\n\n\nGrowth OverviewOpportunity RankingScore ExplanationCategory Health"
   },
   {
     "objectID": "projects/project6/index.html#limitations",
@@ -809,6 +809,6 @@
     "href": "projects/project6/index.html#tools",
     "title": "Marketplace Growth Intelligence",
     "section": "Tools",
-    "text": "Tools\nPostgreSQL (CTEs, window functions, views, materialized views, indexes) · Python (pandas, SQLAlchemy, psycopg) · Streamlit · Plotly\n\nFigures on this page come from the project’s PostgreSQL marts. This is an independent portfolio project and is not affiliated with Olist."
+    "text": "Tools\nPostgreSQL (CTEs, window functions, views, materialized views, indexes) · Python (pandas, SQLAlchemy, psycopg) · Streamlit · Plotly\nView the code on GitHub\nFigures on this page come from the project’s PostgreSQL marts. This is an independent portfolio project and is not affiliated with Olist."
   }
 ]
