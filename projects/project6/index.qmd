@@ -39,6 +39,8 @@ toc-depth: 2
 ::: {.sp-tags}
 [PostgreSQL]{} [SQL · CTEs · window functions]{} [Python]{} [pandas]{} [SQLAlchemy]{} [Streamlit]{} [Plotly]{}
 :::
+
+[View the code on GitHub →](https://github.com/rsm-hstseng/Ecommerce-marketplace-growth-intelligence){.sp-link}
 :::
 
 ## At a Glance
@@ -244,8 +246,6 @@ A three-page **Streamlit** app reads directly from the marts:
 
 PostgreSQL (CTEs, window functions, views, materialized views, indexes) · Python (pandas, SQLAlchemy, psycopg) · Streamlit · Plotly
 
-<!-- TODO: add the GitHub link once the repo is pushed, e.g.
-[View the code on GitHub](https://github.com/<username>/<repo>){.btn .btn-outline-primary}
--->
+[View the code on GitHub](https://github.com/rsm-hstseng/Ecommerce-marketplace-growth-intelligence){.btn .btn-outline-primary}
 
 *Figures on this page come from the project's PostgreSQL marts. This is an independent portfolio project and is not affiliated with Olist.*

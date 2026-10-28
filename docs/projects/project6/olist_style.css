@@ -85,3 +85,11 @@ main table td.best, main table .best { color: var(--sp-accent); font-weight: 600
   .sp-hero .sp-question { font-size: 1.4rem; }
   .sp-cards { grid-template-columns: 1fr; }
 }
+
+/* repo link in hero */
+.sp-hero a.sp-link {
+  display: inline-block; margin-top: 1rem; font-size: .85rem; font-weight: 600;
+  color: #fff; text-decoration: none; padding: .4rem .9rem; border-radius: 99px;
+  background: rgba(147,180,248,.18); border: 1px solid rgba(147,180,248,.5);
+}
+.sp-hero a.sp-link:hover { background: rgba(147,180,248,.3); }
